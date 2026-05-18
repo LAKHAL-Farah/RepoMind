@@ -2,7 +2,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+try:
+    from langchain.text_splitter import RecursiveCharacterTextSplitter
+    _HAS_LANGCHAIN = True
+except Exception:
+    RecursiveCharacterTextSplitter = None
+    _HAS_LANGCHAIN = False
 from config import CHUNK_SIZE, CHUNK_OVERLAP
 
 @dataclass
@@ -19,12 +24,19 @@ def chunk_file(file_path: Path, repo_root: Path, service: str = "root") -> List[
     if not content.strip():
         return []
 
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=CHUNK_SIZE,
-        chunk_overlap=CHUNK_OVERLAP,
-        separators=["\n\n", "\n", " ", ""],
-    )
-    pieces = splitter.split_text(content)
+    if _HAS_LANGCHAIN and RecursiveCharacterTextSplitter is not None:
+        splitter = RecursiveCharacterTextSplitter(
+            chunk_size=CHUNK_SIZE,
+            chunk_overlap=CHUNK_OVERLAP,
+            separators=["\n\n", "\n", " ", ""],
+        )
+        pieces = splitter.split_text(content)
+    else:
+        # Fallback: simple character-based splitter to avoid hard dependency on langchain
+        pieces = []
+        step = max(1, CHUNK_SIZE - CHUNK_OVERLAP)
+        for i in range(0, max(1, len(content)), step):
+            pieces.append(content[i:i + CHUNK_SIZE])
     relative = str(file_path.relative_to(repo_root))
     lang = file_path.suffix.lstrip(".")
 
