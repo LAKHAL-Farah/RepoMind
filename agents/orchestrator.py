@@ -16,8 +16,7 @@ _agents = {
     "architecture": ArchitectureAgent(),
 }
 
-def route_question(question: str, repo_id: str, parsed_repo, findings: list) -> str:
-    """Determine which agent should handle this question and return its answer."""
+def _select_agent(question: str) -> str:
     q_lower = question.lower()
     matched_agent = "architecture"   # default
 
@@ -26,4 +25,18 @@ def route_question(question: str, repo_id: str, parsed_repo, findings: list) -> 
             matched_agent = agent_name
             break
 
+    return matched_agent
+
+
+def route_question(question: str, repo_id: str, parsed_repo, findings: list) -> str:
+    """Determine which agent should handle this question and return its answer."""
+    matched_agent = _select_agent(question)
+
     return _agents[matched_agent].answer(question, repo_id, parsed_repo, findings)
+
+
+def route_question_with_agent(question: str, repo_id: str, parsed_repo, findings: list) -> dict:
+    """Return both the agent answer and the selected agent name."""
+    matched_agent = _select_agent(question)
+    answer = _agents[matched_agent].answer(question, repo_id, parsed_repo, findings)
+    return {"answer": answer, "agent_used": matched_agent}
