@@ -1,14 +1,20 @@
 from __future__ import annotations
 
+import pytest
 import os
+
+if not os.getenv("RUN_E2E"):
+    pytest.skip(
+        "E2E tests skipped in CI — set RUN_E2E=1 to run locally",
+        allow_module_level=True,
+    )
+
 import shutil
 import threading
 import time
 import traceback
 from pathlib import Path
-
 import httpx
-import pytest
 import uvicorn
 from neo4j import GraphDatabase
 from qdrant_client import QdrantClient

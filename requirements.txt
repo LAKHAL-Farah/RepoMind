@@ -146,7 +146,7 @@ python-json-logger==4.1.0
 pytz==2026.2
 pywin32==311
 pywinpty==3.0.3
-PyYAML==6.0.3
+pyyaml>=6.0.1
 pyzmq==27.1.0
 qdrant-client==1.18.0
 referencing==0.37.0
