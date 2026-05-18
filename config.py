@@ -8,7 +8,7 @@ load_dotenv()
 # NVIDIA NIM — uses the OpenAI-compatible API
 NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY")
 NVIDIA_BASE_URL = os.getenv("NVIDIA_BASE_URL", "https://integrate.api.nvidia.com/v1")
-NVIDIA_MODEL = "meta/llama-3.1-70b-instruct"   # swap to any NIM model you prefer
+NVIDIA_MODEL = "meta/llama-3.1-8b-instruct"
 
 # Qdrant
 QDRANT_HOST = os.getenv("QDRANT_HOST", "localhost")
@@ -30,6 +30,10 @@ REPOS_CACHE_DIR = Path(os.getenv("REPOS_CACHE_DIR", "./repos_cache"))
 REPOS_CACHE_DIR.mkdir(exist_ok=True)
 
 # Supported file extensions for code parsing
-CODE_EXTENSIONS = {".py", ".java", ".ts", ".js", ".go", ".rs", ".yaml", ".yml",
-                   ".json", ".xml", ".md", ".dockerfile", ".tf", ".toml"}
+CODE_EXTENSIONS = {
+    ".py", ".js", ".ts", ".tsx", ".jsx", ".java", ".go", ".rs", ".cpp", ".c", ".h", ".cs",
+    ".rb", ".php", ".swift", ".kt", ".yaml", ".yml", ".json", ".toml", ".ini", ".cfg", ".env",
+    ".properties", ".xml", ".gradle", ".maven", ".md", ".rst", ".txt", ".dockerfile", ".tf",
+    ".hcl", ".sh", ".bash", ".zsh", ".bat", ".ps1", ".sql",
+}
                    
